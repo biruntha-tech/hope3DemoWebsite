@@ -16,5 +16,20 @@
 @media (max-width: 768px) {
   .hero {
     margin-top: 0;
+    height: 100vh;
+  }
+
+  .hero-image {
+    object-position: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 100vh;
+  }
+
+  .hero-image {
+    object-position: center top;
   }
 }
