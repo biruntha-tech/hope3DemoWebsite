@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import '../styles/navbar.css';
 import logo from '../assets/logo.png';
 import hope3 from '../assets/hope3.png';
-import usericon from '../assets/usericon.png';
+import getinvolveicon from '../assets/getinvolveicon.png';
 import GetInvolvedMenu from './GetInvolvedMenu';
 
 const Navbar = () => {
@@ -11,7 +11,7 @@ const Navbar = () => {
   const [showGetInvolved, setShowGetInvolved] = useState(false);
   const [hideText, setHideText] = useState(false);
   const [isCardFrozen, setIsCardFrozen] = useState(false);
-  const [isCircularMode, setIsCircularMode] = useState(true);
+  const [animationState, setAnimationState] = useState('hidden'); // 'hidden', 'cycling', 'buttons'
   const getInvolvedRef = useRef(null);
 
   const menuItems = [
@@ -51,10 +51,12 @@ const Navbar = () => {
 
         <div className="navbar-left">
           <div className="navbar-section">
+            <span className="section-icon">📊</span>
             <span className="section-title">Our Impact</span>
             <span className="dropdown-arrow">▼</span>
           </div>
           <div className="navbar-section">
+            <span className="section-icon">🏗️</span>
             <span className="section-title">Our Work</span>
             <span className="dropdown-arrow">▼</span>
           </div>
@@ -64,60 +66,60 @@ const Navbar = () => {
 
         <div className="navbar-right">
           <div className="navbar-section">
+            <span className="section-icon">⚙️</span>
             <span className="section-title">Services</span>
             <span className="dropdown-arrow">▼</span>
           </div>
           <div className="navbar-section">
+            <span className="section-icon">ℹ️</span>
             <span className="section-title">About</span>
             <span className="dropdown-arrow">▼</span>
           </div>
         </div>
 
-        <button 
-          ref={getInvolvedRef}
-          className="getinv-btn"
-          onClick={() => {
-            setHideText(!hideText);
-            setIsCardFrozen(!isCardFrozen);
-          }}
-          onMouseEnter={() => !isCardFrozen && setShowGetInvolved(true)}
-          onMouseLeave={() => !isCardFrozen && setShowGetInvolved(false)}
-        >
-          <img src={usericon} alt="" className="btn-icon" />
-          {!hideText && "Get Involved"}
-        </button>
-        
-        {(showGetInvolved || isCardFrozen) && (
-          <div className="get-involved-card">
+        <div className="profile-dropdown-container">
+          <button 
+            ref={getInvolvedRef}
+            className={`getinv-btn ${showGetInvolved ? 'active' : ''}`}
+            onClick={() => setShowGetInvolved(!showGetInvolved)}
+          >
+            <img src={getinvolveicon} alt="" className="btn-icon" />
+            <span className="btn-text">Get Involved</span>
+          </button>
+          
+          <div className={`get-involved-card ${showGetInvolved ? 'show' : ''}`}>
+            <div className="icon-wrapper">
+              <img src={getinvolveicon} alt="" className="popup-user-icon" />
+            </div>
             <div className="quote-text">
               "Together we can make a difference and create lasting change in our communities."
             </div>
-            <div className="gradient-box">
-              {isCardFrozen ? (
-                <div className={isCircularMode ? "circular-menu" : "list-menu"}>
-                  <button 
-                    className="menu-button" 
-                    style={{"--delay": "0s"}}
-                    onClick={() => setIsCircularMode(false)}
-                  >
-                    Donate
-                  </button>
-                  <button 
-                    className="menu-button" 
-                    style={{"--delay": "0.3s"}}
-                    onClick={() => setIsCircularMode(false)}
-                  >
-                    Apply
-                  </button>
-                  <button 
-                    className="menu-button" 
-                    style={{"--delay": "0.6s"}}
-                    onClick={() => setIsCircularMode(false)}
-                  >
-                    Join Us
-                  </button>
+            <div 
+              className="gradient-box"
+              onMouseEnter={() => {
+                if (animationState === 'hidden') {
+                  setAnimationState('cycling');
+                  setTimeout(() => {
+                    setAnimationState('buttons');
+                  }, 6000); // 2 cycles at 3s each
+                }
+              }}
+            >
+              {animationState === 'cycling' && (
+                <div className="circular-menu cycling">
+                  <div className="cycling-text" style={{"--delay": "0s"}}>Donate</div>
+                  <div className="cycling-text" style={{"--delay": "1s"}}>Apply</div>
+                  <div className="cycling-text" style={{"--delay": "2s"}}>Join Us</div>
                 </div>
-              ) : (
+              )}
+              {animationState === 'buttons' && (
+                <div className="button-menu">
+                  <button className="action-button">Donate</button>
+                  <button className="action-button">Apply</button>
+                  <button className="action-button">Join Us</button>
+                </div>
+              )}
+              {animationState === 'hidden' && (
                 <>
                   <div className="menu-item">Donate</div>
                   <div className="menu-item">Apply</div>
@@ -126,7 +128,7 @@ const Navbar = () => {
               )}
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
