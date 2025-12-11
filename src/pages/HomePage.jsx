@@ -1,5 +1,6 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import Footer from '../components/Footer';
 import '../styles/homepage.css';
 
 const HomePage = () => {
@@ -7,6 +8,7 @@ const HomePage = () => {
     <div className="homepage">
       <Navbar />
       <Hero />
+      <Footer />
     </div>
   );
 };
